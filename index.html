@@ -1,0 +1,74 @@
+﻿<html>
+
+<head>
+	<title>Sermed - Configuración</title>
+	<meta charset="utf-8">
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+	<meta name="viewport" content="width=device-width">
+	<link rel="icon" type="image/png" href="public/logo.png" />
+	<link rel="stylesheet" href="public/ivory.css" type="text/css">
+	<script src="public/jquery-2.1.1.min.js"></script>
+</head>
+
+<body>
+	<div class="content" style="margin-top:10px;">
+		<div class="c7 centered" style="margin-bottom: 30px;">
+			<div class="g1020">
+				<div class="row">
+					<img src="public/logosermed.png">
+				</div>
+				<div class="row">
+					<form id="form">
+						<input type="number" required placeholder="Máquina (Ej: 12)" id="txtMaquina">
+						<input type="text" required id="txtPto" placeholder="Puerto (Ej: COM5)">
+						<button class="blue" type="submit" id="btnConfig" style="margin-top:3px;">Configurar</button>
+					</form>
+					<div style="display:none;" id="success" class="alert success">Configuración establecida.No cerrar esta ventana</div>
+					<div style="display:none;" id="error" class="alert error"></div>
+				</div>
+			</div>
+			<div style="position: relative;bottom: 5px;margin-right: 10px;text-align: right;color: #000;" id="version"></div>
+		</div>
+	</div>
+</body>
+<script>
+	const { ipcRenderer } = require('electron');
+	//version get
+	var element = document.getElementById("version");
+	element.innerHTML = ipcRenderer.sendSync('get-version');
+
+	//verifica si ya hay configuracion
+	var config = ipcRenderer.sendSync('get-config');
+	if (config == true) {
+		var success = document.getElementById("success");
+		success.style.display = success.style.display === 'none' ? '' : 'none';
+		var form = document.getElementById("form");
+		form.style.display = success.style.display === 'none' ? '' : 'none';
+	}
+
+	//Click in button
+	document.querySelector('#btnConfig').addEventListener('click', function (e) {
+		e.preventDefault();
+		let maquina = document.getElementById("txtMaquina").value;
+		let puerto = document.getElementById("txtPto").value;
+		ipcRenderer.send('set-config', maquina, puerto)
+		ipcRenderer.on('response', (event, arg) => {
+			if (arg == "success") {
+				var success = document.getElementById("success");
+				success.style.display = success.style.display === 'none' ? '' : 'none';
+				var form = document.getElementById("form");
+				form.style.display = success.style.display === 'none' ? '' : 'none';
+			}
+		})
+	});
+
+	ipcRenderer.on('error', (event, arg) => {
+		var error=document.getElementById("error");
+		error.style.display = error.style.display === 'none' ? '' : 'none';
+		error.innerHTML = arg;
+		var success = document.getElementById("success");
+		success.style.display =  'none';
+	})
+
+
+</script>
