@@ -50,8 +50,8 @@ var server = function (sensor, idMaquina) {
 	// Una vez configurado, se crea el servidor
 	var server = http.createServer(app);
 	// server.maxConnections = 5;
-	server.listen(8080);
-	console.log("Escuchando conexiones del puerto 8080");
+	server.listen(3001);
+	console.log("Escuchando conexiones del puerto 3001");
 	server.timeout = 10 * 1000
 
 	function enviarIndex(request,res) {

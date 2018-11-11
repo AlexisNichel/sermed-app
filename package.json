@@ -22,7 +22,7 @@
   "scripts": {
     "start": "electron .",
     "pack": "electron-builder --dir",
-    "dist": "electron-builder"
+    "dist": "electron-builder --platform=win32 --arch=ia32"
   },
   "dependencies": {
     "body-parser": "^1.13.3",
