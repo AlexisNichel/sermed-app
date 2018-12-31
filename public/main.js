@@ -12,9 +12,9 @@ $(document).ready(function () {
 		loading = $("#loading"),
 		params = { p_id_maquina: parseInt(localStorage.id) },
 		fields,
-		server = "http://190.104.158.50:2332";
+		server = "http://10.211.55.5:2332";
 		
-
+   // server = "http://mail.sermed.com.py:8081/WSHuella/ws/procesos";
 	var tipo = getUrlParameter("p_tipo");
 	var grupo = getUrlParameter("p_grupo");
 	var secuencia = getUrlParameter("p_secuencia");
@@ -62,6 +62,9 @@ $(document).ready(function () {
 
 	$("#verify").submit(function (e) {
 		var nombre;
+		var checksum;
+		var carnet;
+
 		$(".submit-btn, .back-btn").prop('disabled', true);
 		e.preventDefault();
 		error.hide();
@@ -78,11 +81,7 @@ $(document).ready(function () {
 		if (fields[1].value) {
 			params.p_ci = fields[1].value;
 		};
-		var asociado = parseInt(fields[2].value);
-		if (!isNaN(asociado)) {
-			params.p_secuencia = parseInt(fields[3].value);
-			params.p_id_grupo = asociado;
-		};
+		
 		borrarHuellas() 
 			.then(obtenerHuellas) 
 			.then(comprobarHuellas) 
@@ -94,8 +93,10 @@ $(document).ready(function () {
 
 		function verificarResultado(data) {
 			var response = JSON.parse(data);
-			console.log(data);
 			nombre = response.P_NOMBRE;
+			checksum = "2345354554324234234124353452"; //ejemplo (viene en el responde del server)
+			carnet = "12345"; //ejemplo (viene en el responde del server)
+
 			if (response.P_OK == "NO") {
 				abort({ responseText: "Error Inesperado. Intente Nuevamente" });
 			}
@@ -111,6 +112,10 @@ $(document).ready(function () {
 				$(".submit-btn, .back-btn").prop('disabled', false);
 				$(".cancel-btn").prop('disabled', true);
 				success.fadeIn();
+				setTimeout(function(){
+					window.open("http://visa.sermed.info/auth?"+'socio='+carnet+'&checksum='+checksum,"_self")
+				},3000);
+				
 			}
 		}
 		function enviarResultado() {
@@ -291,12 +296,12 @@ $(document).ready(function () {
 		error.hide();
 		success.hide();
 		fields = $("#enrol").serializeArray();
-		if (fields[4] == null && fields[5] == null) {
+		if (fields[2] == null || fields[3] == null) {
 			alert("Debe elegir 2 huellas a enrolar");
 			return;
 		}
-		if (fields[1].value == "" && fields[2].value == "") {
-			alert("Debe completar el campo Cédula o Grupo y Secuencia");
+		if (fields[1].value == "") {
+			alert("Debe completar el campo código de carnet");
 			return;
 		}
 		$(".submit-btn, .back-btn").prop('disabled', true);
@@ -317,7 +322,7 @@ $(document).ready(function () {
 		return str.replace(/\w\S*/g, function (txt) { return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase(); });
 	}
 	function enrolarHuella1() {
-		loading.html('<img src="loading.gif" /> Ingrese huella <b>Nro ' + fields[4].name[1] + '</b> 3 veces');
+		loading.html('<img src="loading.gif" /> Ingrese huella <b>Nro ' + fields[2].name[1] + '</b> 3 veces');
 		return $.ajax({
 			type: "POST",
 			url: "/enrolar/1",
@@ -342,7 +347,7 @@ $(document).ready(function () {
 	}
 	function enrolarHuella2(valorHuella) {
 		params["p_huella1"] = valorHuella;
-		loading.html('<img src="loading.gif" /> Ingrese huella <b>Nro ' + fields[5].name[1] + '</b> 3 veces');
+		loading.html('<img src="loading.gif" /> Ingrese huella <b>Nro ' + fields[3].name[1] + '</b> 3 veces');
 		return $.ajax({
 			type: "POST",
 			url: "/enrolar/2",
@@ -367,14 +372,10 @@ $(document).ready(function () {
 			params.p_ci = ci;
 		}
 		params.p_id_maquina = parseInt(localStorage.id);
-		var asociado = parseInt(fields[2].value);
-		if (!isNaN(asociado)) {
-			params.p_secuencia = parseInt(fields[3].value);
-			params.p_id_grupo = asociado;
-		};
+
 		params.accion = fields[0].value;
-		params.p_nro_dedo1 = parseInt(fields[4].name[1]);
-		params.p_nro_dedo2 = parseInt(fields[5].name[1]);
+		params.p_nro_dedo1 = parseInt(fields[2].name[1]);
+		params.p_nro_dedo2 = parseInt(fields[3].name[1]);
 		return params;
 	}
 

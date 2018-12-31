@@ -57,27 +57,12 @@
 						<p><b>Para enrolar la huella de un asociado haga click <a href="#" id="enrol-link"><u>aquí</u></a></b></p>
 						<div id="text-ci">
 							<input type="hidden" name="accion" value="validar" >
-							<label>Cédula de identidad</label>
+							<label>Código de carnet</label>
 							<input id="P_CI" name="P_CI" type="text" required placeholder="80012345" size="30" autofocus="">
-							<p>O si lo prefiere ingrese su número de asociado <a href="#" id="id-link"><u>aquí</u></a></p>
+							
 						</div>
-						<div class="hidden row" id="text-id">
-							<div class="c3 first">
-								<label style="white-space: nowrap;" >Grupo</label>
-							</div>
-							<div class="c4">
-								<input id="P_ID_GRUPO" name="P_ID_GRUPO" type="text" placeholder="38350"  size="10">
-							</div>
-							<div class="c2">
-								<label style="white-space: nowrap;" >Secuencia</label>
-							</div>
-							<div class="c3 last">
-								<input id="P_SECUENCIA" name="P_SECUENCIA" type="number" min="0" value="0" placeholder="0" size="5">
-							</div>
-						</div>
-						<button class="blue hidden back-btn" id="back-to-ci">
-							<strong> <</strong>
-						</button>
+						
+						
 						<button class="blue submit-btn"  type="submit">
 							<strong>Verificar</strong>
 						</button>
@@ -86,23 +71,9 @@
 						</button>
 					</form>
 					<form class="hform hidden" id="enrol">
-						<input type="hidden" name="accion" value="insert">
-						<label>Cédula de identidad</label>
+						<input type="hidden" name="accion" value="insertar">
+						<label>Código de carnet</label>
 						<input id="vusuario" name="P_CI" type="text" placeholder="80012345" size="30" autofocus="">
-						<div class="row" id="text-id">
-							<div class="c3 first">
-								<label style="white-space: nowrap;" >Grupo</label>
-							</div>
-							<div class="c4">
-								<input id="P_ID_GRUPO" name="P_ID_GRUPO" type="text" placeholder="38350"  size="10">
-							</div>
-							<div class="c2">
-								<label style="white-space: nowrap;" >Secuencia</label>
-							</div>
-							<div class="c3 last">
-								<input id="P_SECUENCIA" name="P_SECUENCIA" type="number" min="0" value="0" placeholder="1"size="5">
-							</div>
-						</div>
 						<p>Seleccione <b>2 dedos</b> y haga click en enrolar</p>
 						<div id="fingers">
 							<input type="checkbox" name="f1" id="f1"class="css-checkbox">

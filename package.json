@@ -7,8 +7,10 @@
   "build": {
     "appId": "com.sermed.app",
     "win": {
-        "target": ["portable"],
-        "icon": "public/packageicon.png"
+      "target": [
+        "portable"
+      ],
+      "icon": "public/packageicon.png"
     }
   },
   "author": {
