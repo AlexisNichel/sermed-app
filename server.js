@@ -55,6 +55,7 @@ var server = function (sensor, idMaquina) {
 	server.timeout = 10 * 1000
 
 	function enviarIndex(request,res) {
+		//aca tengo el header aun pero como le paso eso al html
 		res.sendFile(__dirname +'/public/index.html');
 	}
 	return server;

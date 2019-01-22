@@ -48,7 +48,7 @@ function openWebMainPage() {
 	console.log(args)
 	if(args.indexOf("relaunch") == -1)
 	{
-		shell.openExternal('http://localhost:3001');
+		shell.openExternal('http://visa.sermed.info/auth/index.php/visacion/visacion');
 	}
 }
 

@@ -1,4 +1,4 @@
-
+﻿
 $(document).ready(function () {
 	$.get("/id").success(function (id) {
 		localStorage.id = id;
@@ -12,7 +12,7 @@ $(document).ready(function () {
 		loading = $("#loading"),
 		params = { p_id_maquina: parseInt(localStorage.id) },
 		fields,
-		server = "http://10.211.55.5:2332";
+		server = "http://localhost:2332";
 		
    // server = "http://mail.sermed.com.py:8081/WSHuella/ws/procesos";
 	var tipo = getUrlParameter("p_tipo");
@@ -50,6 +50,9 @@ $(document).ready(function () {
 		$.xhrPool.abortAll(function () {
 			$(".submit-btn, .back-btn, .cancel-btn").prop('disabled', false);
 			$.post("/cancelar").always(abort);
+			setTimeout(function(){
+				window.open("http://visa.sermed.info/auth/index.php/visacion/visacion","_self")
+			},2000);
 	   });
 	});
 
@@ -60,13 +63,12 @@ $(document).ready(function () {
 		}
 	});
 
-	$("#verify").submit(function (e) {
+//	$("#verify").submit(function (e) {
 		var nombre;
 		var checksum;
-		var carnet;
-
+	
 		$(".submit-btn, .back-btn").prop('disabled', true);
-		e.preventDefault();
+		//e.preventDefault();
 		error.hide();
 		success.hide();
 		loading.html('<img src="loading.gif" /> Obteniendo huellas..');
@@ -93,10 +95,10 @@ $(document).ready(function () {
 
 		function verificarResultado(data) {
 			var response = JSON.parse(data);
+			console.log(response);
 			nombre = response.P_NOMBRE;
 			checksum = "2345354554324234234124353452"; //ejemplo (viene en el responde del server)
-			carnet = "12345"; //ejemplo (viene en el responde del server)
-
+		
 			if (response.P_OK == "NO") {
 				abort({ responseText: "Error Inesperado. Intente Nuevamente" });
 			}
@@ -113,7 +115,7 @@ $(document).ready(function () {
 				$(".cancel-btn").prop('disabled', true);
 				success.fadeIn();
 				setTimeout(function(){
-					window.open("http://visa.sermed.info/auth?"+'socio='+carnet+'&checksum='+checksum,"_self")
+					window.open("http://visa.sermed.info/auth/visacion/visacion/visaConsultaHv/"+params.p_ci,"_self")
 				},3000);
 				
 			}
@@ -156,6 +158,7 @@ $(document).ready(function () {
 			})
 				.fail(function (err) {
 					deferred.reject({ responseText: "Error Inesperado. Intente Nuevamente" })
+					
 				});
 			return deferred.promise()
 		}
@@ -163,7 +166,8 @@ $(document).ready(function () {
 			var deferred = $.Deferred();
 			try {
 				if (!data.P_HUELLA1) { 
-					return deferred.reject({ responseText: "Beneficiario Inactivo o Inexistente." })
+					mostrarEnrol();
+					return deferred.reject({ responseText: "Beneficiario no tiene huellas cargadas" })
 				};
 				deferred.resolve(data);
 			}
@@ -183,9 +187,14 @@ $(document).ready(function () {
 				contentType: 'application/json'
 			});
 		}
-		function enviarError() {
+		function enviarError(res) {
 			params.accion = "resultado";
 			params.p_resultado = "Error en la Validación";
+			if(res && res.responseText != "Beneficiario no tiene huellas cargadas"){
+              setTimeout(function(){
+				window.open("http://visa.sermed.info/auth/index.php/visacion/visacion","_self")
+			 },3000);
+			}			
 			return $.ajax({
 				type: 'POST',
 				url: server+"/errores",
@@ -195,7 +204,7 @@ $(document).ready(function () {
 				contentType: 'application/json'
 			})
 		}
-	})
+	//})
 	function ocultarCI() {
 		$("#text-ci").hide();
 		$("#P_CI").val('');
@@ -392,7 +401,9 @@ $(document).ready(function () {
 					success.text("Huella Cargada Exitosamente.");
 				}
 				success.fadeIn();
-
+				setTimeout(function(){
+					window.open("http://visa.sermed.info/auth/index.php/visacion/visacion","_self")
+				},2000);
 			}
 			else {
 				error.text(respuesta.P_MENSAJE);
