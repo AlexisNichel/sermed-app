@@ -208,7 +208,7 @@ var Sensor = function (comName) {
 						estaConectado = false;
 						puerto.removeAllListeners('data');
 						resp.send(data.toString('base64'));
-					}
+				} 
 				});
 			});
 		},

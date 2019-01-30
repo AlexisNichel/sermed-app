@@ -58,9 +58,14 @@
 					<form class="hform" id="verify" >
 						<p hidden><b>Para enrolar la huella de un asociado haga click <a href="#" id="enrol-link"><u>aquí</u></a></b></p>
 						<div id="text-ci" hidden>
-							<input type="hidden" name="accion" value="validar">
+							<input type="hidden" name="accion" value="VALIDAR">
 							<label>Código de carnet</label>
 							<input id="P_CI" name="P_CI" type="text" required placeholder="80012345" size="30" autofocus="">
+						</div>	
+						<div id="text-or" hidden>
+							<input type="hidden" name="accion" value="origen">
+							<label>Código de carnet</label>
+							<input id="P_OR" name="P_OR" type="text" placeholder="" size="30" autofocus="">
 						</div>					
 						<button class="blue cancel cancel-btn" disabled>
 							<strong>Cancelar</strong>
@@ -68,7 +73,7 @@
 					</form>
 					<form class="hform hidden" id="enrol">
 					    <div id="text-ci2" hidden>
-						<input type="hidden" name="accion" value="insertar">
+						<input type="hidden" name="accion" value="INSERTAR">
 						<label>Código de carnet</label>
 						<input id="vusuario" name="P_CI" type="text" placeholder="80012345" size="30" autofocus="">
 						</div>
@@ -114,13 +119,11 @@
 		if (name = (new RegExp('[?&]' + encodeURIComponent(name) + '=([^&]*)')).exec(location.search))
 			return decodeURIComponent(name[1].replace('_', ''));
 	}
-	var jsvar = get('so');
-	document.getElementById('P_CI').value = jsvar || null;
-	document.getElementById('vusuario').value = jsvar || null;
+	var socio = get('so');	
+	document.getElementById('P_CI').value = socio || null;
+	document.getElementById('vusuario').value = socio || null;
 	$('#P_CI').attr('readonly','readonly');
 	$('#vusuario').attr('readonly','readonly');
-
-//	document.getElementById("verify").submit();
 </script>
 
 </html>

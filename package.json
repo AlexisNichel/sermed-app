@@ -24,7 +24,7 @@
   "scripts": {
     "start": "electron .",
     "pack": "electron-builder --dir",
-    "dist": "electron-builder --platform=win32 --arch=x64",
+    "dist": "electron-builder --platform=win32 --arch=ia32",
     "rebuild": "electron-rebuild serialport"
   },
   "dependencies": {
