@@ -12,9 +12,7 @@ $(document).ready(function () {
 		loading = $("#loading"),
 		params = { p_id_maquina: parseInt(localStorage.id) },
 		fields,
-		//server = "http://localhost:2332";
-	//	server = "http://190.104.158.50:2332"  //crear server
-    server = "http://mail.sermed.com.py:8081/WSHuella/ws/procesos";
+    server = "http://visa.sermed.info:8081/WSHuella/ws/procesos";
 	var tipo = getUrlParameter("p_tipo");
 	var grupo = getUrlParameter("p_grupo");
 	var secuencia = getUrlParameter("p_secuencia");
