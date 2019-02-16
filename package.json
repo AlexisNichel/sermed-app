@@ -1,6 +1,6 @@
 {
   "name": "Sermed",
-  "version": "1.0.0",
+  "version": "1.0.2",
   "main": "index.js",
   "description": "Aplicación para el manejo de huellas digitales",
   "keywords": "serial, node-serialport",
@@ -24,7 +24,9 @@
   "scripts": {
     "start": "electron .",
     "pack": "electron-builder --dir",
-    "dist": "electron-builder --platform=win32 --arch=ia32",
+    "dist84": "electron-builder --platform=win32 --arch=ia32",
+    "dist64": "electron-builder --platform=win32 --arch=x64",
+    "dist": "electron-builder --platform=win32 --arch=all",
     "rebuild": "electron-rebuild serialport"
   },
   "dependencies": {

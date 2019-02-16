@@ -12,9 +12,7 @@ $(document).ready(function () {
 		loading = $("#loading"),
 		params = { p_id_maquina: parseInt(localStorage.id) },
 		fields,
-		//server = "http://localhost:2332";
-	//	server = "http://190.104.158.50:2332"  //crear server
-    server = "http://mail.sermed.com.py:8081/WSHuella/ws/procesos";
+    server = "http://visa.sermed.info:8081/WSHuella/ws/procesos";
 	var tipo = getUrlParameter("p_tipo");
 	var grupo = getUrlParameter("p_grupo");
 	var secuencia = getUrlParameter("p_secuencia");
@@ -55,19 +53,16 @@ $(document).ready(function () {
 	   });
 	});
 
-	var limit = 2;
+	var limit = 1;
 	$('input.css-checkbox').on('change', function (evt) {
+		console.log(event);
 		if ($(this).siblings(':checked').length >= limit) {
 			this.checked = false;
 		}
 	});
 
-//	$("#verify").submit(function (e) {
 		var nombre;
-		var checksum;
-	
 		$(".submit-btn, .back-btn").prop('disabled', true);
-		//e.preventDefault();
 		error.hide();
 		success.hide();
 		loading.html('<img src="loading.gif" /> Obteniendo huellas..');
@@ -95,7 +90,6 @@ $(document).ready(function () {
 		function verificarResultado(data) {
 			var response = data;
 			nombre = response.P_NOMBRE;
-			checksum = "2345354554324234234124353452"; //ejemplo (viene en el responde del server)
 		
 			if (response.P_OK == "NO") {
 				abort({ responseText: "Error Inesperado. Intente Nuevamente" });
@@ -161,17 +155,15 @@ $(document).ready(function () {
 			loading.html('<img src="loading.gif" /> Escribiendo Huellas..');
 			$(".cancel-btn").prop('disabled', true);
 			$.post("/escribir/1", { huella: response.P_HUELLA1.replace(/(?:\\[rn]|[\r\n]+)+/g, "") }).done(function (res) {
-			$.post("/escribir/2", { huella: response.P_HUELLA2.replace(/(?:\\[rn]|[\r\n]+)+/g, "") }).done(function () {
 					if (response.P_NOMBRE_BENEFICIARIO != null) {
 						nombre = response.P_NOMBRE_BENEFICIARIO;
-						loading.html('<img src="loading.gif" />Bienvenido <br>' + toTitleCase(response.P_NOMBRE_BENEFICIARIO) + '<br> Ingrese huella Nro <b>' + response.P_NRO_DEDO1 + '</b> o huella Nro <b>' + response.P_NRO_DEDO2) + "</b>";
+						loading.html('<img src="loading.gif" />Bienvenido <br>' + toTitleCase(response.P_NOMBRE_BENEFICIARIO) + '<br> Ingrese huella Nro <b>' + response.P_NRO_DEDO1 + '</b>');
 					}
 					else {
-						loading.html('<img src="loading.gif" />Bienvenido <br> Ingrese huella Nro <b>' + response.P_NRO_DEDO1 + '</b> o huella Nro <b>' + response.P_NRO_DEDO2) + "</b>";
+						loading.html('<img src="loading.gif" />Bienvenido <br> Ingrese huella Nro <b>' + response.P_NRO_DEDO1 + '</b>');
 					}
 					deferred.resolve(response);
-				});
-			})
+				})
 				.fail(function (err) {
 					deferred.reject({ responseText: "Error Inesperado. Intente Nuevamente" })
 					
@@ -223,7 +215,6 @@ $(document).ready(function () {
 				contentType: 'text/plain'
 			})
 		}
-	//})
 	function ocultarCI() {
 		$("#text-ci").hide();
 		$("#P_CI").val('');
@@ -261,10 +252,8 @@ $(document).ready(function () {
 			loading.show();
 			minutes = parseInt(timer / 60, 10);
 			seconds = parseInt(timer % 60, 10);
-
 			minutes = minutes < 10 ? "0" + minutes : minutes;
 			seconds = seconds < 10 ? "0" + seconds : seconds;
-
 			display.text("Reiniciando en: " + seconds + " segundos");
 			$(".submit-btn, .back-btn, .cancel-btn").prop('disabled', true);
 			error.show();
@@ -324,8 +313,8 @@ $(document).ready(function () {
 		error.hide();
 		success.hide();
 		fields = $("#enrol").serializeArray();
-		if (fields[2] == null || fields[3] == null) {
-			alert("Debe elegir 2 huellas a enrolar");
+		if (fields[2] == null) {
+			alert("Debe elegir huella a enrolar");
 			return;
 		}
 		if (fields[1].value == "") {
@@ -340,7 +329,6 @@ $(document).ready(function () {
 		$('html, body').animate({ scrollTop: loading.offset().top }, 'slow');
 		borrarHuellas() 
 			.then(enrolarHuella1) 
-			.then(enrolarHuella2) 
 			.then(enviarHuellas) 
 			.done(alInsertarRegistro)
 			.fail(abort);
@@ -373,17 +361,8 @@ $(document).ready(function () {
 			})
 		return deferred.promise();
 	}
-	function enrolarHuella2(valorHuella) {
-		params["p_huella1"] = valorHuella;
-		loading.html('<img src="loading.gif" /> Ingrese huella <b>Nro ' + fields[3].name[1] + '</b> 3 veces');
-		return $.ajax({
-			type: "POST",
-			url: "/enrolar/2",
-			timeout: 0
-		}).then(res=>{return res});
-	}
 	function enviarHuellas(valorHuella) {
-		params["p_huella2"] = valorHuella;
+		params["p_huella1"] = valorHuella;
 		return $.ajax({
 			type: 'POST',
 			url: server+"/huellas",
@@ -403,7 +382,6 @@ $(document).ready(function () {
 
 		params.accion = fields[0].value;
 		params.p_nro_dedo1 = parseInt(fields[2].name[1]);
-		params.p_nro_dedo2 = parseInt(fields[3].name[1]);
 		return params;
 	}
 
