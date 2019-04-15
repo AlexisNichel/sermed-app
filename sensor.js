@@ -1,15 +1,13 @@
-var SerialPort = require("serialport"),
-	EventEmitter = require('events');
+var SerialPort = require("serialport");
+var	EventEmitter = require('events');
 var Sensor = function (comName) {
-	var nombrePuerto = comName,
-		sensor = this,
-		estaConectado = false,
-		puerto = new SerialPort(nombrePuerto, {
+	var nombrePuerto = comName;
+	var	sensor = this;
+	var	estaConectado = false;
+	var	puerto = new SerialPort(nombrePuerto, {
 			baudRate: 115200,
 			autoOpen: false
 		}, false);
-
-
 	puerto.on('error', function (err) {
 		console.log("error");
 	})
@@ -22,22 +20,17 @@ var Sensor = function (comName) {
 	puerto.on('disconnected', function () {
 		console.log("se desconecto");
 	});
-
-
 	this.connect = function (req, resp) {
 		return new Promise((resolve, reject) => {
 			puerto.open(function (err) {
-				if (err) {
+				if (err) 
 					reject(err);
-				}
 				resolve();
 			});
 		});
 	}
-
 	//Comandos 
 	this.encenderLed = function (req, resp) {
-		console.log("Encendiendo LED...");
 		var data = new Buffer("55AA24010200010000000000000000000000000000002701", "hex");
 		puerto.write(data, function () {
 			puerto.once('data', function (data) {
@@ -45,9 +38,7 @@ var Sensor = function (comName) {
 			});
 		});
 	};
-
 	this.apagarLed = function (req, resp) {
-		console.log("Apagando LED...");
 		var data = new Buffer("55AA24010200000000000000000000000000000000002601", "hex");
 		puerto.write(data, function () {
 			puerto.once('data', function (result) {
@@ -55,11 +46,20 @@ var Sensor = function (comName) {
 			});
 		});
 	};
-
+	this.configTimeout = function (seconds) {
+		var hexSexonds = parseInt(seconds).toString(16);
+		if (hexSexonds.length == 1) 
+			hexSexonds = "0" + hexSexonds;
+		var data = new Buffer("55AA0E010200" + hexSexonds.toUpperCase() + "000000000000000000000000000000", "hex");
+		puerto.write(checksum(data), function () {
+			puerto.once('data', function (data) {
+				return true;
+			});
+		});
+	};
 	this.borrarHuellas = function (req, resp) {
-		if (estaConectado) {
+		if (estaConectado) 
 			resp.status(500).send("Ya existe una conexión con el sensor desde otra ventana del navegador.");
-		}
 		else {
 			estaConectado = true;
 			var data = new Buffer("55AA06010000000000000000000000000000000000000601", "hex");
@@ -69,9 +69,7 @@ var Sensor = function (comName) {
 				puerto.removeAllListeners('data');
 				resp.status(500).send("Reiniciando aplicación. Por favor espere unos segundos y vuelva a intentarlo.");
 				sensor.emit("restart");
-			
-			
-			}, 1000);
+			}, 2000);
 			var data = new Buffer("55AA06010000000000000000000000000000000000000601", "hex");
 			puerto.write(data, function () {
 				puerto.once('data', function (result) {
@@ -88,7 +86,6 @@ var Sensor = function (comName) {
 			});
 		}
 	};
-
 	this.cancelar = function (req, resp) {
 		estaConectado = false;
 		var data = new Buffer("55AA30010000000000000000000000000000000000003001", "hex");
@@ -109,16 +106,13 @@ var Sensor = function (comName) {
 			});
 		});
 	};
-
 	this.verificar = function (req, resp) {
-		console.log("Verificando.");
 		var data = new Buffer("55AA02010000000000000000000000000000000000000201", "hex");
 		puerto.write(data, function () {
 			puerto.on('data', function (result) {
 				estaConectado = false;
 				console.log("El comando mide " + result.length + " bytes");
 				if (result.length == 48) {
-					console.log(result.toString('hex'));
 					result = result.slice(24, 48);
 					console.log(result.toString('hex'));
 				}
@@ -132,8 +126,8 @@ var Sensor = function (comName) {
 					console.log("La huella se encuentra en el template " + result[8]);
 				}
 				else if (result[8] === 0x23) {
-					console.log("Tiempo de espera agotado.");
 					puerto.removeAllListeners('data');
+					console.log("Tiempo de espera agotado.");
 					resp.status(500).send("Tiempo de espera agotado.");
 				}
 				else if (result[2] == 0x02 && result[3] == 0x01 && result[8] == 0x12) {
@@ -153,8 +147,6 @@ var Sensor = function (comName) {
 				}
 				else {
 					console.log(result.toString('hex'));
-
-
 					puerto.removeAllListeners('data');
 					console.log("Ha ocurrido un error. Intente nuevamente");
 					resp.status(500).send("Ha ocurrido un error. Intente nuevamente");
@@ -162,8 +154,6 @@ var Sensor = function (comName) {
 			});
 		});
 	},
-
-
 		this.escribirHuella = function (req, resp) {
 			console.log("Escribiendo Huella..");
 			var dedo = req.params.dedo;
@@ -183,7 +173,6 @@ var Sensor = function (comName) {
 				});
 			});
 		},
-
 		this.obtenerHuella = function (req, resp, huella) {
 			var command = new Buffer("55AA0A0102000" + huella + "000000000000000000000000000000", "hex");
 			var i = 0;
@@ -208,11 +197,10 @@ var Sensor = function (comName) {
 						estaConectado = false;
 						puerto.removeAllListeners('data');
 						resp.send(data.toString('base64'));
-				} 
+					}
 				});
 			});
 		},
-
 		this.enrolar = function (req, resp) {
 			var data;
 			var huella = req.params.dedo;
@@ -292,12 +280,7 @@ var Sensor = function (comName) {
 					else {
 						puerto.removeAllListeners('data');
 						console.log(result.toString('hex'));
-						console.log("Error Inesperado");
-						//	puerto.close(function () {
 						console.log("Sensor apagado.");
-						//		resp.status(500).send("Por favor, reconecte el lector e intente nuevamente. Si el problema persiste, solicite un nuevo lector");
-						//	});
-						// resp.status(500).send("Ha ocurrido un error. Intente nuevamente.");
 					}
 				});
 			});
@@ -305,7 +288,6 @@ var Sensor = function (comName) {
 }
 Sensor.prototype = new EventEmitter.EventEmitter;
 module.exports = Sensor;
-
 //Utilidades
 function checksum(command) {
 	var i, sum = 0;
@@ -320,7 +302,6 @@ function checksum(command) {
 	chk[1] = chk1;
 	return Buffer.concat([command, chk]);
 }
-
 function calcular_chk(command) {
 	var i,
 		sum = 0;
@@ -331,7 +312,6 @@ function calcular_chk(command) {
 	command[23] = 0x01;
 	return command;
 }
-
 function set_cmd(command) {
 	var i;
 	for (i = 0; i <= 23; i++) {

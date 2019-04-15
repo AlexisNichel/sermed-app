@@ -1,5 +1,4 @@
 ﻿<html>
-
 <head>
 	<title>Sermed - Configuración</title>
 	<meta charset="utf-8">
@@ -9,7 +8,6 @@
 	<link rel="stylesheet" href="public/ivory.css" type="text/css">
 	<script src="public/jquery-2.1.1.min.js"></script>
 </head>
-
 <body>
 	<div class="content" style="margin-top:10px;">
 		<div class="c7 centered" style="margin-bottom: 30px;">
@@ -19,8 +17,14 @@
 				</div>
 				<div class="row">
 					<form id="form">
-						<input type="number" required placeholder="Máquina (Ej: 12)" id="txtMaquina">
+					<div style="margin-bottom: 20px; margin-top: 20px;">
+						<input type="number" required placeholder="Máquina (Ej: 12)" id="txtMaquina">			
 						<input type="text" required id="txtPto" placeholder="Puerto (Ej: COM5)">
+					</div>
+					<div style="margin-bottom: 10px;">
+						<input type="number" required placeholder="Reintentos (Ej:3)" id="txtReintento">
+						<input type="number" required placeholder="Timeout segundos (Ej:10)" id="txtTimeout">
+					</div>
 						<button class="blue" type="submit" id="btnConfig" style="margin-top:3px;">Configurar</button>
 					</form>
 					<div style="display:none;" id="success" class="alert success">Configuración establecida.No cerrar esta ventana</div>
@@ -36,7 +40,6 @@
 	//version get
 	var element = document.getElementById("version");
 	element.innerHTML = ipcRenderer.sendSync('get-version');
-
 	//verifica si ya hay configuracion
 	var config = ipcRenderer.sendSync('get-config');
 	if (config == true) {
@@ -45,13 +48,14 @@
 		var form = document.getElementById("form");
 		form.style.display = success.style.display === 'none' ? '' : 'none';
 	}
-
 	//Click in button
 	document.querySelector('#btnConfig').addEventListener('click', function (e) {
 		e.preventDefault();
 		let maquina = document.getElementById("txtMaquina").value;
 		let puerto = document.getElementById("txtPto").value;
-		ipcRenderer.send('set-config', maquina, puerto)
+		let reintentos =document.getElementById("txtReintento").value;
+		let timeout=document.getElementById("txtTimeout").value;
+		ipcRenderer.send('set-config', maquina, puerto, reintentos, timeout)
 		ipcRenderer.on('response', (event, arg) => {
 			if (arg == "success") {
 				var success = document.getElementById("success");
@@ -61,7 +65,6 @@
 			}
 		})
 	});
-
 	ipcRenderer.on('error', (event, arg) => {
 		var error=document.getElementById("error");
 		error.style.display = error.style.display === 'none' ? '' : 'none';
@@ -69,6 +72,4 @@
 		var success = document.getElementById("success");
 		success.style.display =  'none';
 	})
-
-
 </script>

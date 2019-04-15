@@ -1,5 +1,4 @@
 <html>
-
 <head>
 	<title>Sermed - Acceso </title>
 	<meta charset="utf-8">
@@ -10,33 +9,7 @@
 	<link rel="stylesheet" href="style.css" type="text/css">
 	<script src="jquery-2.1.1.min.js"></script>
 	<script src="main.js"></script>
-	<script type="text/javascript">
-		$(function () {
-			$.xhrPool = [];
-			$.xhrPool.abortAll = function (callback) {
-				$(this).each(function (i, jqXHR) {   //  cycle through list of recorded connection
-					jqXHR.abort();  //  aborts connection
-					$.xhrPool.splice(i, 1); //  removes from list by index
-				});
-				callback();
-			}
-			$.ajaxSetup({
-				timeout: 5000,
-				beforeSend: function (jqXHR) { $.xhrPool.push(jqXHR); }, //  annd connection to list
-				complete: function (jqXHR) {
-					var i = $.xhrPool.indexOf(jqXHR);   //  get index for current connection completed
-					if (i > -1) $.xhrPool.splice(i, 1); //  removes from list by index
-				}
-			});
-		})
-	</script>
 </head>
-<style type="text/css">
-	.alert {
-		font: 25px "HelveticaNeue", "Helvetica Neue", Helvetica, Arial, sans-serif;
-	}
-</style>
-
 <body>
 	<div class="content">
 		<div class="g1024">
@@ -55,33 +28,17 @@
 					<div id="error" class="error alert hidden">
 					</div>
 					<img style="margin-bottom:10px; display:none;" id="manos" src="hands.png">
-					<form class="hform" id="verify" >
-						<p hidden><b>Para enrolar la huella de un asociado haga click <a href="#" id="enrol-link"><u>aquí</u></a></b></p>
-						<div id="text-ci" hidden>
-							<input type="hidden" name="accion" value="VALIDAR">
-							<label>Código de carnet</label>
-							<input id="P_CI" name="P_CI" type="text" required placeholder="80012345" size="30" autofocus="">
-						</div>	
-						<div id="text-or" hidden>
-							<input type="hidden" name="accion" value="origen">
-							<label>Código de carnet</label>
-							<input id="P_OR" name="P_OR" type="text" placeholder="" size="30" autofocus="">
-						</div>					
+					<form class="hform" id="verify">
 						<button class="blue cancel cancel-btn" disabled>
 							<strong>Cancelar</strong>
 						</button>
 					</form>
 					<form class="hform hidden" id="enrol">
-					    <div id="text-ci2" hidden>
-						<input type="hidden" name="accion" value="INSERTAR">
-						<label>Código de carnet</label>
-						<input id="vusuario" name="P_CI" type="text" placeholder="80012345" size="30" autofocus="">
-						</div>
 						<p>Seleccione <b>1 dedo</b> y haga click en enrolar</p>
 						<div id="fingers">
 							<input type="checkbox" name="f6" id="f1" class="css-checkbox" disabled="disabled">
 							<label for="f1" class="css-label"></label>
-							<input type="checkbox" name="f7" id="f2" class="css-checkbox" disabled="disabled"> 
+							<input type="checkbox" name="f7" id="f2" class="css-checkbox" disabled="disabled">
 							<label for="f2" class="css-label"></label>
 							<input type="checkbox" name="f3" id="f3" class="css-checkbox" disabled="disabled">
 							<label for="f3" class="css-label"></label>
@@ -102,11 +59,21 @@
 							<img style="margin-bottom:20px;" src="hands.png">
 						</div>
 						<button class="blue submit-btn" type="submit">
-									<strong>Enrolar</strong>
+							<strong>Enrolar</strong>
 						</button>
 						<button class="blue cancel cancel-btn" disabled>
 							<strong>Cancelar</strong>
 						</button>
+							
+					</form>
+					<form class="hform hidden" id="verifyenrol">
+						<p><b>Para re-enrolar la huella del asociado haga click <a href="#" id="enrol-link"><u>aquí</u></a></b></p>
+						<button class="blue submit-btn" type="submit">
+							<strong>Verificar</strong>
+						</button>
+						<button class="blue end end-btn" disabled>
+								<strong>Finalizar</strong>
+							</button>
 					</form>
 				</div>
 			</div>
@@ -114,16 +81,4 @@
 		</div>
 	</div>
 </body>
-<script>
-	function get(name) {
-		if (name = (new RegExp('[?&]' + encodeURIComponent(name) + '=([^&]*)')).exec(location.search))
-			return decodeURIComponent(name[1].replace('_', ''));
-	}
-	var socio = get('so');	
-	document.getElementById('P_CI').value = socio || null;
-	document.getElementById('vusuario').value = socio || null;
-	$('#P_CI').attr('readonly','readonly');
-	$('#vusuario').attr('readonly','readonly');
-</script>
-
 </html>

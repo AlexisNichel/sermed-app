@@ -2,6 +2,10 @@ body{
 	background: #004795;
 }
 
+.alert {
+	font: 25px "HelveticaNeue", "Helvetica Neue", Helvetica, Arial, sans-serif;
+}
+
 .g1024{
 	background: white;
 	min-height: 500px;
