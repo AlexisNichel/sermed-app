@@ -95,30 +95,6 @@ $(document).ready(function () {
 			}, 2000);
 		});
 	});
-	$(".end").click(function (e) {
-		e.preventDefault();
-		$(".submit-btn, .cancel-btn").prop('disabled', true);
-		$.xhrPool.abortAll(function () {
-			$(".submit-btn, .back-btn, .cancel-btn").prop('disabled', false);
-			switch (origen) {
-				case "cn":
-					window.open("http://visa.sermed.info/auth/visacion/visacion/visaConsultaHv/" + params.p_ci, "_self")
-					break;
-				case "cu":
-					window.open("http://visa.sermed.info/auth/visacion/visacion/visaConsultaUrgenciaHv/" + params.p_ci, "_self")
-					break;
-				case "sn":
-					window.open("http://visa.sermed.info/auth/visacion/visacion/visaServicioHv/" + params.p_ci, "_self")
-					break;
-				case "su":
-					window.open("http://visa.sermed.info/auth/visacion/visacion/visaServicioUrgenciaHv/" + params.p_ci, "_self")
-					break;
-				case "ve":
-					window.open("http://visa.sermed.info/auth/index.php/visacion/visacion", "_self")
-					break;
-			}
-		});
-	});
 	$("#login").submit(function (e) {
 		e.preventDefault();
 	});
@@ -187,10 +163,7 @@ $(document).ready(function () {
 			$(".cancel-btn").prop('disabled', true);
 			success.fadeIn();
 			console.log(origen);
-			if (verifyUserStatus) {
-				$(".end-btn").prop('disabled', false);
-			}
-			else {
+		
 				setTimeout(function () {
 					switch (origen) {
 						case "cn":
@@ -210,7 +183,6 @@ $(document).ready(function () {
 							break;
 					}
 				}, 3000);
-			}
 
 		}
 	}
@@ -353,7 +325,6 @@ $(document).ready(function () {
 		error.fadeIn();
 	}
 	function mostrarEnrol() {
-		$(".end-btn").prop('disabled', true);
 		$("#verify").hide();
 		$("#verifyenrol").hide();
 		$("#enrol").fadeIn("slow");
