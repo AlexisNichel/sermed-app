@@ -45,6 +45,8 @@ $(document).ready(function () {
 	}
 	var socio = get('so');
 	var origen = get('or');
+	var destino = get('de');
+
 
 	/************Get DOM elements**************/
 	var success = $("#success");
@@ -162,28 +164,13 @@ $(document).ready(function () {
 			$(".submit-btn, .back-btn").prop('disabled', false);
 			$(".cancel-btn").prop('disabled', true);
 			success.fadeIn();
-			console.log(origen);
-		
-				setTimeout(function () {
-					switch (origen) {
-						case "cn":
-							window.open("http://visa.sermed.info/auth/visacion/visacion/visaConsultaHv/" + params.p_ci, "_self")
-							break;
-						case "cu":
-							window.open("http://visa.sermed.info/auth/visacion/visacion/visaConsultaUrgenciaHv/" + params.p_ci, "_self")
-							break;
-						case "sn":
-							window.open("http://visa.sermed.info/auth/visacion/visacion/visaServicioHv/" + params.p_ci, "_self")
-							break;
-						case "su":
-							window.open("http://visa.sermed.info/auth/visacion/visacion/visaServicioUrgenciaHv/" + params.p_ci, "_self")
-							break;
-						case "ve":
-							window.open("http://visa.sermed.info/auth/index.php/visacion/visacion", "_self")
-							break;
-					}
-				}, 3000);
-
+			console.log(destino);
+			setTimeout(function () {
+				if (origen == "ve")
+					window.open("http://visa.sermed.info/auth/index.php/visacion/visacion", "_self")
+				else
+					window.open(`http://visa.sermed.info/auth/visacion/visacion/${destino}/${params.p_ci}`, "_self")
+			}, 3000);
 		}
 	}
 	function enviarResultado() {
@@ -194,7 +181,7 @@ $(document).ready(function () {
 			dataType: 'json',
 			processData: false,
 			contentType: 'text/plain'
-		//	contentType: 'application/json'
+			//	contentType: 'application/json'
 		})
 	}
 	function verificarHuellas() {
@@ -263,7 +250,7 @@ $(document).ready(function () {
 				reintento = reintento + 1;
 				if (reintento < parseInt(localStorage.reintent))
 					verifyUser();
-				else 
+				else
 					window.open("http://visa.sermed.info/auth/index.php/visacion/visacion", "_self")
 			}, 5000);
 		}
@@ -274,7 +261,7 @@ $(document).ready(function () {
 			dataType: 'json',
 			processData: false,
 			contentType: 'text/plain'
-		//	contentType: 'application/json'
+			//	contentType: 'application/json'
 		})
 	}
 	function startTimer(duration, display) {
@@ -392,7 +379,7 @@ $(document).ready(function () {
 			contentType: false,
 			dataType: 'json',
 			contentType: 'text/plain'
-		//	contentType: 'application/json'
+			//	contentType: 'application/json'
 		});
 	}
 	function construirPeticion() {
