@@ -1,9 +1,0 @@
-directories:
-  output: dist
-  buildResources: build
-appId: com.sermed.app
-win:
-  target:
-    - portable
-  icon: public/packageicon.png
-electronVersion: 2.0.8
