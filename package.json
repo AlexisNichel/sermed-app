@@ -34,7 +34,7 @@
     "express": "^4.13.3",
     "node-localstorage": "^0.5.1",
     "path-extra": "^1.0.3",
-    "serialport": "^6.2.2",
+    "serialport": "^8.0.3",
     "serve-static": "^1.10.0",
     "winston": "^1.0.1"
   },
